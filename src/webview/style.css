@@ -1,0 +1,23 @@
+body {
+  padding: 16px;
+}
+
+#messages-container {
+  margin-bottom: 8px;
+}
+
+#messages-container > * {
+  border-bottom: 1px solid gray;
+  padding: 8px 0;
+}
+
+#prompt-textarea {
+  width: 100%;
+  resize: none;
+  margin: 8px 0;
+}
+
+.instruction {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}

@@ -45,6 +45,7 @@
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.9",
     "esbuild": "^0.16.17",
+    "esbuild-plugin-copy": "^2.1.1",
     "eslint": "^8.56.0",
     "typescript": "^5.3.3"
   },

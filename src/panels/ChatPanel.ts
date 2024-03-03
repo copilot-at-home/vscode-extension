@@ -52,6 +52,8 @@ export class ChatPanel {
     ChatPanel.currentPanel = undefined;
 
     this._panel.dispose();
+    this._wsClient?.close();
+    this._wss.close();
 
     while (this._disposables.length) {
       const disposable = this._disposables.pop();
@@ -113,6 +115,8 @@ export class ChatPanel {
     extensionUri: vscode.Uri
   ) {
     const webviewUri = getUri(webview, extensionUri, ["out", "webview.js"]);
+    const styleUri = getUri(webview, extensionUri, ["out", "style.css"]);
+
     const nonce = getNonce();
 
     return /*html*/ `
@@ -121,12 +125,14 @@ export class ChatPanel {
         <head>
           <meta charset="UTF-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'nonce-${nonce}';">
+          <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src ${webview.cspSource}; script-src 'nonce-${nonce}';">
+          <link rel="stylesheet" href="${styleUri}">
           <title>Copilot At Home</title>
         </head>
         <body>
           <div id="messages-container"></div>
           <textarea id='prompt-textarea' placeholder='Type here'></textarea>
+          <div class='instruction'>Alt + Enter to send</div>
           <script type="module" nonce="${nonce}" src="${webviewUri}"></script>
         </body>
       </html>

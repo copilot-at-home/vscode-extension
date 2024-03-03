@@ -13,6 +13,7 @@ function main() {
 
       messagesContainer.appendChild(createMsgDiv(message));
       promptTextarea.value = chatSession.getState().draft;
+      promptTextarea.dispatchEvent(new CustomEvent("input"));
     }
   });
 
@@ -28,6 +29,7 @@ function main() {
       case "copyText":
         const draft = chatSession.copyText(data);
         promptTextarea.value = draft;
+        promptTextarea.dispatchEvent(new CustomEvent("input"));
     }
   });
 }
