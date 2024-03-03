@@ -25,6 +25,9 @@ function main() {
         const messages = chatSession.getState().messages.map(createMsgDiv);
         messagesContainer.replaceChildren(...messages);
         return;
+      case "copyText":
+        const draft = chatSession.copyText(data);
+        promptTextarea.value = draft;
     }
   });
 }

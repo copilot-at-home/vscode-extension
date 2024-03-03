@@ -91,4 +91,11 @@ export class ChatSession {
 
     return receivedMsg;
   }
+
+  copyText(text: string): string {
+    let { draft } = this.getState();
+    draft += "\n" + text;
+    this.setState({ draft });
+    return draft;
+  }
 }

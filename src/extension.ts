@@ -9,7 +9,18 @@ export function activate(context: vscode.ExtensionContext) {
     }
   );
 
-  context.subscriptions.push(startSessionCommand);
+  const copyTextCommand = vscode.commands.registerCommand(
+    "copilotAtHome.copyText",
+    () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const selectedText = editor.document.getText(editor.selection);
+        ChatPanel.postMessage({ command: "copyText", data: selectedText });
+      }
+    }
+  );
+
+  context.subscriptions.push(...[startSessionCommand, copyTextCommand]);
 }
 
 export function deactivate() {}

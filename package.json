@@ -17,6 +17,11 @@
         "command": "copilotAtHome.startSession",
         "title": "Start or resume chat session",
         "category": "Copilot At Home"
+      },
+      {
+        "command": "copilotAtHome.copyText",
+        "title": "Copy text into chat",
+        "category": "Copilot At Home"
       }
     ]
   },
