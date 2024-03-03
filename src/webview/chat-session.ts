@@ -1,4 +1,4 @@
-export interface Message {
+export interface ChatMessage {
   id: number;
   content: string;
   from: "user" | "assistant";
@@ -6,14 +6,14 @@ export interface Message {
 
 interface Chat {
   draft: string;
-  messages: Message[];
+  messages: ChatMessage[];
 }
 
 const vscode = acquireVsCodeApi<Chat>();
 
 interface SetChatSessionState {
   draft?: string;
-  messages?: Message[];
+  messages?: ChatMessage[];
 }
 
 export class ChatSession {
@@ -35,14 +35,12 @@ export class ChatSession {
       ...this.getState(),
       ...state,
     });
-
-    console.log(this.getState());
   }
 
-  sendMessage(): Message {
+  sendMessage(): ChatMessage {
     const state = this.getState();
 
-    const message: Message = {
+    const message: ChatMessage = {
       id: state.messages.length + 1,
       content: state.draft,
       from: "user",
@@ -53,6 +51,44 @@ export class ChatSession {
       messages: [...state.messages, message],
     });
 
+    vscode.postMessage({
+      command: "sendMessage",
+      data: {
+        id: message.id + 1,
+        content: message.content,
+      },
+    });
+
     return message;
+  }
+
+  receiveMessage({
+    id,
+    content,
+  }: {
+    id: number;
+    content: string;
+  }): ChatMessage {
+    const state = this.getState();
+
+    const receivedMsg: ChatMessage = {
+      id,
+      content,
+      from: "assistant",
+    };
+
+    let existingMsgIdx = state.messages.findIndex((msg) => msg.id === id);
+
+    if (existingMsgIdx >= 0) {
+      state.messages[existingMsgIdx] = receivedMsg;
+    } else {
+      state.messages.push(receivedMsg);
+    }
+
+    this.setState({
+      messages: state.messages,
+    });
+
+    return receivedMsg;
   }
 }

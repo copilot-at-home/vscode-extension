@@ -1,11 +1,15 @@
 import * as vscode from "vscode";
 import { getUri } from "../utilities/get-uri";
 import { getNonce } from "../utilities/get-nonce";
+import { WebSocketServer, WebSocket } from "ws";
 
 export class ChatPanel {
   public static currentPanel: ChatPanel | undefined;
   private readonly _panel: vscode.WebviewPanel;
   private _disposables: vscode.Disposable[] = [];
+
+  private _wss!: WebSocketServer;
+  private _wsClient: WebSocket | undefined;
 
   private constructor(panel: vscode.WebviewPanel, extensionUri: vscode.Uri) {
     this._panel = panel;
@@ -16,6 +20,10 @@ export class ChatPanel {
       this._panel.webview,
       extensionUri
     );
+
+    this._initWebsocketServer();
+
+    this._setWebviewMessageListener(this._panel.webview);
   }
 
   public static render(extensionUri: vscode.Uri) {
@@ -51,6 +59,53 @@ export class ChatPanel {
         disposable.dispose();
       }
     }
+  }
+
+  private _initWebsocketServer() {
+    this._wss = new WebSocketServer({
+      port: 8765,
+    });
+
+    this._wss.on("connection", (client) => {
+      console.log("socket client connected");
+
+      this._wsClient = client;
+
+      client.on("message", (data) => {
+        const dataStr = data.toString();
+
+        if (dataStr === "keepalive") {
+          return;
+        }
+
+        const dataParsed = JSON.parse(dataStr);
+
+        ChatPanel.postMessage({
+          command: "receiveMessage",
+          data: dataParsed,
+        });
+      });
+
+      client.on("close", () => {
+        this._wsClient = undefined;
+      });
+    });
+  }
+
+  private _setWebviewMessageListener(webview: vscode.Webview) {
+    webview.onDidReceiveMessage(
+      (message: any) => {
+        const { command, data } = message;
+
+        switch (command) {
+          case "sendMessage":
+            this._wsClient?.send(JSON.stringify(data));
+            return;
+        }
+      },
+      undefined,
+      this._disposables
+    );
   }
 
   private _getWebviewContent(

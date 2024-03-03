@@ -1,10 +1,35 @@
-import { ChatSession, Message } from "./chat-session";
+import { ChatSession, ChatMessage } from "./chat-session";
 
 window.addEventListener("load", main);
 
 function main() {
   const chatSession = new ChatSession();
+  const promptTextarea = getPromptTextArea(chatSession);
+  const messagesContainer = getMessagesContainer(chatSession);
 
+  document.addEventListener("keydown", (ev) => {
+    if (ev.altKey && ev.key === "Enter") {
+      const message = chatSession.sendMessage();
+
+      messagesContainer.appendChild(createMsgDiv(message));
+      promptTextarea.value = chatSession.getState().draft;
+    }
+  });
+
+  window.addEventListener("message", (ev) => {
+    const { command, data } = ev.data;
+
+    switch (command) {
+      case "receiveMessage":
+        chatSession.receiveMessage(data);
+        const messages = chatSession.getState().messages.map(createMsgDiv);
+        messagesContainer.replaceChildren(...messages);
+        return;
+    }
+  });
+}
+
+function getPromptTextArea(chatSession: ChatSession) {
   const promptTextarea = document.getElementById(
     "prompt-textarea"
   ) as HTMLTextAreaElement;
@@ -19,24 +44,23 @@ function main() {
     });
   });
 
+  return promptTextarea;
+}
+
+function getMessagesContainer(chatSession: ChatSession) {
   const messagesContainer = document.getElementById(
     "messages-container"
   ) as HTMLDivElement;
+
   const messages = chatSession.getState().messages.map(createMsgDiv);
+
   messagesContainer.append(...messages);
 
-  document.addEventListener("keydown", (ev) => {
-    if (ev.altKey && ev.key === "Enter") {
-      const message = chatSession.sendMessage();
-
-      messagesContainer.appendChild(createMsgDiv(message));
-      promptTextarea.value = chatSession.getState().draft;
-    }
-  });
+  return messagesContainer;
 }
 
-function createMsgDiv(msg: Message) {
+function createMsgDiv(msg: ChatMessage) {
   const msgDiv = document.createElement("div");
-  msgDiv.innerText = msg.content;
+  msgDiv.innerHTML = msg.content;
   return msgDiv;
 }
