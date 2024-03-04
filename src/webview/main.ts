@@ -38,6 +38,7 @@ function main() {
         const draft = chatSession.copyText(data);
         promptTextarea.value = draft;
         promptTextarea.dispatchEvent(new CustomEvent("input"));
+        return;
     }
   });
 }

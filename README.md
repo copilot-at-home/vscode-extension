@@ -1,71 +1,47 @@
-# copilot-at-home-vscode README
+# Setup
 
-This is the README for your extension "copilot-at-home-vscode". After writing up a brief description, we recommend including the following sections.
+This extension is not yet published in the VS Code Marketplace but it can be installed manually with the following steps:
 
-## Features
+## Download
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+Download the latest version of the package (.vsix) file from Releases
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+From Extensions view
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Click Views and More Actions (3 dots on top right of the view)
+2. Select Install from VSIX
 
-## Requirements
+OR
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+Run the following command in terminal
 
-## Extension Settings
+```
+code --install-extension copilot-at-home-vscode-0.0.1.vsix
+```
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+# Usage
 
-For example:
+Before running the commands make sure the prerequisites are fulfilled
 
-This extension contributes the following settings:
+## Prerequisites
 
-- `myExtension.enable`: Enable/disable this extension.
-- `myExtension.thing`: Set to `blah` to do something.
+1. Install the chromium extension and activate it if not activated by default. If you toggle developer mode you can also see if the service worker is active or not. It'll say inactive if it isn't.
+2. Run a tab of [chatgpt](https://chat.openai.com/).
 
-## Known Issues
+## Commands
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+These can be run from the command palette or assigned a keyboard shortcut from Preferences
 
-## Release Notes
+### Start or resume chat session
 
-Users appreciate release notes as you update your extension.
+This opens the chat panel and starts a websocket server which the chromium extension connects to. If a panel is already opened, it'll bring that in foreground.
 
-### 1.0.0
+Now you can start exchanging messages with chatgpt in vscode!
 
-Initial release of ...
+### Copy text into chat
 
-### 1.0.1
+This copies the selected text in the prompt textbox in the chat panel. The chat panel must be opened for this to run.
 
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-- [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-- Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-- Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-- Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-- [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-- [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+**Known issue**: The chat panel must be in foreground for copy to work. It can be opened in a different view column until the issue is resolved.
