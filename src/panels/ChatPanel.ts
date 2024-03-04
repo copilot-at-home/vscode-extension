@@ -131,6 +131,7 @@ export class ChatPanel {
         </head>
         <body>
           <div id="messages-container"></div>
+          <div id="receiving-message-container"></div>
           <textarea id='prompt-textarea' placeholder='Type here'></textarea>
           <div class='instruction'>Alt + Enter to send</div>
           <script type="module" nonce="${nonce}" src="${webviewUri}"></script>

@@ -6,6 +6,7 @@ function main() {
   const chatSession = new ChatSession();
   const promptTextarea = getPromptTextArea(chatSession);
   const messagesContainer = getMessagesContainer(chatSession);
+  const receivingMsgContainer = getReceivingMessageContainer();
 
   document.addEventListener("keydown", (ev) => {
     if (ev.altKey && ev.key === "Enter") {
@@ -22,9 +23,15 @@ function main() {
 
     switch (command) {
       case "receiveMessage":
-        chatSession.receiveMessage(data);
-        const messages = chatSession.getState().messages.map(createMsgDiv);
-        messagesContainer.replaceChildren(...messages);
+        const { isComplete, receivedMsg } = chatSession.receiveMessage(data);
+
+        if (isComplete) {
+          messagesContainer.appendChild(createMsgDiv(receivedMsg));
+          receivingMsgContainer.innerHTML = "";
+          return;
+        }
+
+        receivingMsgContainer.innerHTML = receivedMsg.content;
         return;
       case "copyText":
         const draft = chatSession.copyText(data);
@@ -62,6 +69,14 @@ function getMessagesContainer(chatSession: ChatSession) {
   messagesContainer.append(...messages);
 
   return messagesContainer;
+}
+
+function getReceivingMessageContainer() {
+  const receivingMsgContainer = document.getElementById(
+    "receiving-message-container"
+  ) as HTMLDivElement;
+
+  return receivingMsgContainer;
 }
 
 function createMsgDiv(msg: ChatMessage) {

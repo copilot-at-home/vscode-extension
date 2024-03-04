@@ -62,34 +62,26 @@ export class ChatSession {
     return message;
   }
 
-  receiveMessage({
-    id,
-    content,
-  }: {
-    id: number;
-    content: string;
-  }): ChatMessage {
-    const state = this.getState();
+  receiveMessage({ id, content }: { id: number; content: string }): {
+    isComplete: boolean;
+    receivedMsg: ChatMessage;
+  } {
+    const endOfMessageIdentifier = "@@@@@";
+    const isComplete = content.endsWith(endOfMessageIdentifier);
 
     const receivedMsg: ChatMessage = {
       id,
-      content,
+      content: isComplete
+        ? content.substring(0, content.length - endOfMessageIdentifier.length)
+        : content,
       from: "assistant",
     };
 
-    let existingMsgIdx = state.messages.findIndex((msg) => msg.id === id);
-
-    if (existingMsgIdx >= 0) {
-      state.messages[existingMsgIdx] = receivedMsg;
-    } else {
-      state.messages.push(receivedMsg);
+    if (isComplete) {
+      this.onReceivingMessageCompleted(receivedMsg);
     }
 
-    this.setState({
-      messages: state.messages,
-    });
-
-    return receivedMsg;
+    return { isComplete, receivedMsg };
   }
 
   copyText(text: string): string {
@@ -104,5 +96,12 @@ export class ChatSession {
     this.setState({ draft });
 
     return draft;
+  }
+
+  private onReceivingMessageCompleted(receivedMsg: ChatMessage) {
+    const state = this.getState();
+    this.setState({
+      messages: [...state.messages, receivedMsg],
+    });
   }
 }
