@@ -24,14 +24,15 @@ function main() {
     switch (command) {
       case "receiveMessage":
         const { isComplete, receivedMsg } = chatSession.receiveMessage(data);
+        let content = receivedMsg.content;
 
         if (isComplete) {
           messagesContainer.appendChild(createMsgDiv(receivedMsg));
-          receivingMsgContainer.innerHTML = "";
-          return;
+          content = "";
         }
 
-        receivingMsgContainer.innerHTML = receivedMsg.content;
+        receivingMsgContainer.innerHTML = content;
+
         return;
       case "copyText":
         const draft = chatSession.copyText(data);
@@ -81,6 +82,11 @@ function getReceivingMessageContainer() {
 
 function createMsgDiv(msg: ChatMessage) {
   const msgDiv = document.createElement("div");
-  msgDiv.innerHTML = msg.content;
+
+  if (msg.from === "user") {
+    msgDiv.innerText = msg.content;
+  } else {
+    msgDiv.innerHTML = msg.content;
+  }
   return msgDiv;
 }
