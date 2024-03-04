@@ -23,12 +23,12 @@ code --install-extension copilot-at-home-vscode-0.0.1.vsix
 
 # Usage
 
-Before running the commands make sure the prerequisites are fulfilled
-
 ## Prerequisites
 
-1. Install the chromium extension and activate it if not activated by default. If you toggle developer mode you can also see if the service worker is active or not. It'll say inactive if it isn't.
+1. Install the chromium extension.
 2. Run a tab of [chatgpt](https://chat.openai.com/).
+
+For more information check [chromium extension's readme](https://github.com/copilot-at-home/chromium-extension/blob/main/README.md) which also explains how both the extensions work to bring chatgpt like experience in vscode!
 
 ## Commands
 
