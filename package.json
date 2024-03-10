@@ -3,7 +3,7 @@
   "publisher": "long_hair_programmer",
   "displayName": "Copilot At Home",
   "description": "Use chatgpt for coding without leaving vscode",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -19,18 +19,20 @@
     "url": "https://github.com/copilot-at-home/vscode-extension.git"
   },
   "license": "MIT",
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "copilotAtHome.startSession",
-        "title": "Start or resume chat session",
+        "command": "copilotAtHome.copyText",
+        "title": "Copy text into chat",
         "category": "Copilot At Home"
       },
       {
-        "command": "copilotAtHome.copyText",
-        "title": "Copy text into chat",
+        "command": "copilotAtHome.copyTextAndSend",
+        "title": "Copy text into chat and send message",
         "category": "Copilot At Home"
       }
     ]
